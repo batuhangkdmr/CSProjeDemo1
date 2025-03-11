@@ -8,7 +8,10 @@ namespace CSProjeDemo1.Core.Entities
 {
     public class KitapBilim : Kitap
     {
+        public KitapBilim() : base() { }
+
         public KitapBilim(string isbn, string baslik, string yazar, int yayinYili)
-                  : base(isbn, baslik, yazar, yayinYili) { }
+            : base(isbn, baslik, yazar, yayinYili) { }
     }
+
 }

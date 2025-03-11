@@ -1,3 +1,6 @@
+using CSProjeDemo1.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 namespace CSProjeDemo1.Web
 {
     public class Program
@@ -8,6 +11,10 @@ namespace CSProjeDemo1.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<KutuphaneContext>(options =>
+              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             var app = builder.Build();
 

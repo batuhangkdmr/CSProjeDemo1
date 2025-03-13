@@ -15,11 +15,24 @@ namespace CSProjeDemo1.Core.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
         public int Id { get; set; }
+        [Required(ErrorMessage = "Üye adı zorunludur.")]
+        [StringLength(50, ErrorMessage = "Ad 50 karakterden uzun olamaz.")]
         public string Ad { get; set; }
-        public string Soyad { get; set; }
-        public int UyeNumarasi { get; set; }
-        public List<Kitap> OduncAldigiKitaplar { get; set; }
 
+        [Required(ErrorMessage = "Üye soyadı zorunludur.")]
+        [StringLength(50, ErrorMessage = "Soyad 50 karakterden uzun olamaz.")]
+        public string Soyad { get; set; }
+
+        [Required(ErrorMessage = "Üye numarası zorunludur.")]
+        [Range(1000, 9999, ErrorMessage = "Üye numarası 1000 ile 9999 arasında olmalıdır.")]
+        public int UyeNumarasi { get; set; }
+        // Bir üyenin ödünç aldığı kitapların listesi
+        public List<Kitap> OduncAldigiKitaplar { get; set; } = new List<Kitap>();
+
+        public Uye()
+        {
+            
+        }
         public Uye(string ad, string soyad, int uyeNumarasi)
         {
             Ad = ad;

@@ -1,0 +1,26 @@
+﻿@model CSProjeDemo1.Core.Entities.Kitap
+
+<h2>Yeni Kitap Ekle</h2>
+<form asp-action="Add" method="post">
+    <div class="form-group">
+        <label>ISBN:</label>
+        <input type="text" asp-for="ISBN" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Başlık:</label>
+        <input type="text" asp-for="Baslik" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Yazar:</label>
+        <input type="text" asp-for="Yazar" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Yayın Yılı:</label>
+        <input type="number" asp-for="YayinYili" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Durum:</label>
+        <select asp-for="KitapDurumu" asp-items="Html.GetEnumSelectList<CSProjeDemo1.Core.Enums.Durum>()" class="form-control"></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Kitap Ekle</button>
+</form>

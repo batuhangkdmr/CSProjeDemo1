@@ -9,18 +9,27 @@ using System.Threading.Tasks;
 
 namespace CSProjeDemo1.Core.Entities
 {
-    public abstract class Kitap
+    public class Kitap
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string ISBN { get; set; }  // Kitap benzersiz numarası
-        public string Baslik { get; set; }
-        public string Yazar { get; set; }
-        public int YayinYili { get; set; }
-        public Durum KitapDurumu { get; set; } // Kitabın mevcut durumu
+        [Required(ErrorMessage = "ISBN numarası zorunludur.")]
+        [StringLength(13, MinimumLength = 10, ErrorMessage = "ISBN 10-13 karakter arasında olmalıdır.")]
+        public string ISBN { get; set; }
 
-        protected Kitap() { }
+        [Required(ErrorMessage = "Kitap başlığı zorunludur.")]
+        public string Baslik { get; set; }
+
+        [Required(ErrorMessage = "Yazar adı zorunludur.")]
+        public string Yazar { get; set; }
+
+        [Range(1000, 2100, ErrorMessage = "Yayın yılı geçerli olmalıdır.")]
+        public int YayinYili { get; set; }
+
+        public Durum KitapDurumu { get; set; }
+
+        public Kitap() { }
         public Kitap(string isbn, string baslik, string yazar, int yayinYili)
         {
             ISBN = isbn;

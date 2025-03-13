@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CSProjeDemo1.Core.Entities.Uye>
+
+<h2>Kütüphane Üyeleri</h2>
+<a href="@Url.Action("Ekle", "Uye")" class="btn btn-primary">+ Yeni Üye Ekle</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Üye Numarası</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uye in Model)
+        {
+            <tr>
+                <td>@uye.Ad</td>
+                <td>@uye.Soyad</td>
+                <td>@uye.UyeNumarasi</td>
+                <td>
+                    <a href="@Url.Action("Duzenle", "Uye", new { id = uye.Id })" class="btn btn-warning">Düzenle</a>
+                    <a href="@Url.Action("Sil", "Uye", new { id = uye.Id })" class="btn btn-danger" onclick="return confirm('Bu üyeyi silmek istediğinizden emin misiniz?');">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

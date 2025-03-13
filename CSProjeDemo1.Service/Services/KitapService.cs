@@ -55,5 +55,36 @@ namespace CSProjeDemo1.Service.Services
             await _kitapRepository.UpdateAsync(kitap);
             return true;
         }
+        public async Task AddKitapAsync(Kitap kitap)
+        {
+            await _kitapRepository.AddAsync(kitap);
+        }
+        public async Task<bool> UpdateKitapAsync(Kitap kitap)
+        {
+            var existingKitap = await _kitapRepository.GetByIdAsync(kitap.Id);
+            if (existingKitap == null)
+                return false;
+
+            // Sadece değişen alanları güncelleyelim
+            existingKitap.ISBN = kitap.ISBN;
+            existingKitap.Baslik = kitap.Baslik;
+            existingKitap.Yazar = kitap.Yazar;
+            existingKitap.YayinYili = kitap.YayinYili;
+            existingKitap.KitapDurumu = kitap.KitapDurumu;
+
+            await _kitapRepository.UpdateAsync(existingKitap);
+            return true;
+        }
+
+        public async Task<bool> DeleteKitapAsync(int id)
+        {
+            var kitap = await _kitapRepository.GetByIdAsync(id);
+            if (kitap == null)
+                return false;
+
+            await _kitapRepository.DeleteAsync(kitap);
+            return true;
+        }
+
     }
 }

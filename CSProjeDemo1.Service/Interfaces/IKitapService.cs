@@ -14,5 +14,8 @@ namespace CSProjeDemo1.Service.Interfaces
         Task<Kitap> GetBookByIdAsync(int id);
         Task<bool> OduncAlAsync(int kitapId, int uyeId);
         Task<bool> IadeEtAsync(int kitapId);
+        Task AddKitapAsync(Kitap kitap);
+        Task<bool> DeleteKitapAsync(int id);
+        Task<bool> UpdateKitapAsync(Kitap kitap);
     }
 }

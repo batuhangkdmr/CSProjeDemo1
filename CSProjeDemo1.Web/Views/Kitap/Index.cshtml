@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CSProjeDemo1.Core.Entities.Kitap>
+
+<h2>Kütüphane Kitapları</h2>
+
+<!-- Kitap Ekleme Butonu -->
+<a href="@Url.Action("Add", "Kitap")" class="btn btn-success mb-3">+ Kitap Ekle</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Başlık</th>
+            <th>Yazar</th>
+            <th>Yayın Yılı</th>
+            <th>Durum</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kitap in Model)
+        {
+            <tr>
+                <td>@kitap.ISBN</td>
+                <td>@kitap.Baslik</td>
+                <td>@kitap.Yazar</td>
+                <td>@kitap.YayinYili</td>
+                <td>@kitap.KitapDurumu</td>
+                <td>
+                    @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
+                    {
+                        <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id, uyeId = 1 })" class="btn btn-primary">Ödünç Al</a>
+                    }
+                    else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
+                    {
+                        <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })" class="btn btn-danger">İade Et</a>
+                    }
+
+                    <!-- Düzenle ve Sil Butonları -->
+                    <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })" class="btn btn-warning">Düzenle</a>
+                    <a href="@Url.Action("Delete", "Kitap", new { id = kitap.Id })" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinizden emin misiniz?');">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

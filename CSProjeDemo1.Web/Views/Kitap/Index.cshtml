@@ -44,15 +44,19 @@
                     }
                 </td>
                 <td>
-                    @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
+                    <!-- Eğer giriş yapan Admin değilse ve kitap ödünç alınabilirse "Ödünç Al" butonunu göster -->
+                    @if (!User.IsInRole("Admin") && kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
                     {
                         <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id })" class="btn btn-primary">Ödünç Al</a>
                     }
-                    else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
+
+                    <!-- Eğer kitap ödünç alınmışsa "İade Et" butonunu göster -->
+                    @if (!User.IsInRole("Admin") && kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
                     {
                         <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })" class="btn btn-secondary">İade Et</a>
                     }
 
+                    <!-- Admin için Düzenle ve Sil butonlarını göster -->
                     @if (User.IsInRole("Admin"))
                     {
                         <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })" class="btn btn-warning">Düzenle</a>

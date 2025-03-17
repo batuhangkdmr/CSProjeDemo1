@@ -1,0 +1,25 @@
+﻿@model IEnumerable<CSProjeDemo1.Core.Entities.OduncAlma>
+
+<h2>Ödünç Alınan Kitaplar</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kitap</th>
+            <th>Kullanıcı</th>
+            <th>Alma Tarihi</th>
+            <th>İade Tarihi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var odunc in Model)
+        {
+            <tr>
+                <td>@odunc.Kitap.Baslik</td>
+                <td>@odunc.ApplicationUser.UserName (@odunc.ApplicationUser.Email)</td>
+                <td>@odunc.AlmaTarihi.ToString("dd/MM/yyyy")</td>
+                <td>@(odunc.IadeTarihi.HasValue ? odunc.IadeTarihi.Value.ToString("dd/MM/yyyy") : "Henüz İade Edilmedi")</td>
+            </tr>
+        }
+    </tbody>
+</table>

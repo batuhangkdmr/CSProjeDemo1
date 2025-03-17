@@ -72,16 +72,24 @@ namespace CSProjeDemo1.Web.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-            if (result.Succeeded)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
             {
-                return RedirectToAction("Index", "Kitap");
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+                if (result.Succeeded)
+                {
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return RedirectToAction("Index", "Admin"); // Admin giriş yaparsa Admin Paneline yönlendir
+                    }
+                    return RedirectToAction("Index", "Kitap"); // Normal kullanıcı giriş yaparsa Kitaplar sayfasına yönlendir
+                }
             }
 
-            ModelState.AddModelError("", "Geçersiz giriş denemesi. E-posta veya şifre hatalı.");
+            ModelState.AddModelError("", "Geçersiz giriş denemesi.");
             return View(model);
         }
+
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

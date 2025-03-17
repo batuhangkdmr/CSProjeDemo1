@@ -1,0 +1,38 @@
+﻿@using CSProjeDemo1.Core.Entities
+@model IEnumerable<ApplicationUser>
+
+<h2>Kullanıcı Listesi</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Rol</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.Ad</td>
+                <td>@user.Soyad</td>
+                <td>
+                    @(User.IsInRole("Admin") ? "Admin" : "Kullanıcı")
+                </td>
+                <td>
+                    @if (!User.IsInRole("Admin") || user.Email != "admin@library.com") // Admin kendi kendini silemez
+                    {
+                        <form asp-action="DeleteUser" asp-controller="Admin" method="post" onsubmit="return confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?');">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <button type="submit" class="btn btn-danger">Sil</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

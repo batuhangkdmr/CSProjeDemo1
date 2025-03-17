@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CSProjeDemo1.Core.Entities.OduncAlma>
+
+<h2>Ödünç Aldığım Kitaplar</h2>
+
+@if (!Model.Any())
+{
+    <p class="alert alert-warning">Henüz ödünç aldığınız bir kitap bulunmamaktadır.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ISBN</th>
+                <th>Başlık</th>
+                <th>Yazar</th>
+                <th>Yayın Yılı</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var odunc in Model)
+            {
+                <tr>
+                    <td>@odunc.Kitap.ISBN</td>
+                    <td>@odunc.Kitap.Baslik</td>
+                    <td>@odunc.Kitap.Yazar</td>
+                    <td>@odunc.Kitap.YayinYili</td>
+                    <td>
+                        <form asp-action="IadeEt" asp-controller="Odunc" method="post">
+                            <input type="hidden" name="id" value="@odunc.Id" />
+                            <button type="submit" class="btn btn-danger">İade Et</button>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}

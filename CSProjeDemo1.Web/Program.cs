@@ -16,42 +16,59 @@ namespace CSProjeDemo1.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
+            // **Veritabaný Baðlantýsý**
             builder.Services.AddDbContext<KutuphaneContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // **Generic Repository Pattern Baðýmlýlýðý**
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            // **Servislerin Baðýmlýlýk Enjeksiyonu**
             builder.Services.AddScoped<IKitapService, KitapService>();
-            builder.Services.AddScoped<IUyeService, UyeService>();
-
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<KutuphaneContext>()
-    .AddDefaultTokenProviders();
-
+            builder.Services.AddScoped<IOduncAlmaService, OduncAlmaService>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            // **Identity Yapýlandýrmasý**
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<KutuphaneContext>()
+            .AddDefaultTokenProviders();
+
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // **Veritabaný Güncellenmesi (Migration Otomatik Uygulama)**
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<KutuphaneContext>();
+                context.Database.Migrate(); // **Migration'ý otomatik uygula**
+            }
+
+            // **Middleware Konfigürasyonu**
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(); // **Statik Dosyalar için Gereklidir**
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Kitap}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Kitap}/{action=Index}/{id?}");
 
             app.Run();
         }

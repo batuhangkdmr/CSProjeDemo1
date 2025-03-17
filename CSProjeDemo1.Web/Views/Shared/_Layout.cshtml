@@ -1,45 +1,56 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CSProjeDemo1.Web</title>
-    <script type="importmap"></script>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CSProjeDemo1.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-light" href="@Url.Action("Index", "Home")">📚 Kütüphane Sistemi</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Kitap")">Kitaplar</a>
+                            <a class="nav-link text-light" href="@Url.Action("Index", "Kitap")">📖 Kitaplar</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            @if (!User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Odunc" asp-action="Index">📌 Ödünç Aldıklarım</a>
+                                </li>
+                            }
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">⚙ Yönetim Paneli</a>
+                                </li>
+                            }
+
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Odunc" asp-action="Index">Ödünç Aldıklarım</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Logout">Çıkış Yap (@User.Identity.Name)</a>
+                                <a class="nav-link text-warning" asp-controller="Auth" asp-action="Logout">🚪 Çıkış Yap (@User.Identity.Name)</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Login">Giriş Yap</a>
+                                <a class="nav-link text-light" asp-controller="Auth" asp-action="Login">🔑 Giriş Yap</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Register">Kayıt Ol</a>
+                                <a class="nav-link text-light" asp-controller="Auth" asp-action="Register">📝 Kayıt Ol</a>
                             </li>
                         }
                     </ul>
@@ -47,17 +58,20 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer bg-dark text-light text-center py-3 mt-4">
         <div class="container">
-            &copy; 2025 - CSProjeDemo1.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <small>&copy; 2025 - CSProjeDemo1.Web | <a href="@Url.Action("Privacy", "Home")" class="text-light">Gizlilik Politikası</a></small>
         </div>
     </footer>
+
+    <!-- Bootstrap JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

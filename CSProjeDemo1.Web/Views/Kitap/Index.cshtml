@@ -1,69 +1,100 @@
 ﻿@model IEnumerable<CSProjeDemo1.Core.Entities.Kitap>
 
-<h2>Kütüphane Kitapları</h2>
+<h2 class="text-center mt-3">📚 Kütüphane Kitapları</h2>
 
 <!-- Hata Mesajları -->
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div class="alert alert-danger text-center">@TempData["Error"]</div>
 }
 
-<!-- Kitap Ekleme Butonu (Sadece Admin Görsün) -->
+<!-- Admin için "Kitap Ekle" Butonu -->
 @if (User.IsInRole("Admin"))
 {
-    <a href="@Url.Action("Add", "Kitap")" class="btn btn-success mb-3">+ Kitap Ekle</a>
+    <div class="text-end">
+        <a href="@Url.Action("Add", "Kitap")" class="btn btn-success mb-3">
+            ➕ Kitap Ekle
+        </a>
+    </div>
 }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ISBN</th>
-            <th>Başlık</th>
-            <th>Yazar</th>
-            <th>Yayın Yılı</th>
-            <th>Durum</th>
-            <th>İşlem</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var kitap in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
             <tr>
-                <td>@kitap.ISBN</td>
-                <td>@kitap.Baslik</td>
-                <td>@kitap.Yazar</td>
-                <td>@kitap.YayinYili</td>
-                <td>
-                    @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
-                    {
-                        <span class="badge bg-success">Ödünç Alınabilir</span>
-                    }
-                    else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
-                    {
-                        <span class="badge bg-danger">Ödünç Verildi</span>
-                    }
-                </td>
-                <td>
-                    <!-- Eğer giriş yapan Admin değilse ve kitap ödünç alınabilirse "Ödünç Al" butonunu göster -->
-                    @if (!User.IsInRole("Admin") && kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
-                    {
-                        <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id })" class="btn btn-primary">Ödünç Al</a>
-                    }
-
-                    <!-- Eğer kitap ödünç alınmışsa "İade Et" butonunu göster -->
-                    @if (!User.IsInRole("Admin") && kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
-                    {
-                        <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })" class="btn btn-secondary">İade Et</a>
-                    }
-
-                    <!-- Admin için Düzenle ve Sil butonlarını göster -->
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>📖 ISBN</th>
+                }
+                <th>📕 Kitap Adı</th>
+                <th>✍ Yazar</th>
+                <th>📅 Yayın Yılı</th>
+                <th>🔖 Durum</th>
+                <th>⚙ İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var kitap in Model)
+            {
+                <tr>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })" class="btn btn-warning">Düzenle</a>
-                        <a href="@Url.Action("Delete", "Kitap", new { id = kitap.Id })" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinizden emin misiniz?');">Sil</a>
+                        <td class="fw-bold">@kitap.ISBN</td>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    <td>@kitap.Baslik</td>
+                    <td>@kitap.Yazar</td>
+                    <td>@kitap.YayinYili</td>
+                    <td>
+                        @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
+                        {
+                            <span class="badge bg-success">📗 Ödünç Alınabilir</span>
+                        }
+                        else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
+                        {
+                            <span class="badge bg-danger">📕 Ödünç Verildi</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <!-- Kullanıcılar için Ödünç Al / İade Et -->
+                            @if (!User.IsInRole("Admin"))
+                            {
+                                @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
+                                {
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id })"
+                                           class="btn btn-primary btn-sm">📥 Ödünç Al</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Login", "Auth")"
+                                           class="btn btn-primary btn-sm">📥 Ödünç Al</a>
+                                    }
+                                }
+                                else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
+                                {
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })"
+                                           class="btn btn-secondary btn-sm">📤 İade Et</a>
+                                    }
+                                }
+                            }
+
+                            <!-- Admin için Düzenle / Sil -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })"
+                                   class="btn btn-warning btn-sm">✏ Düzenle</a>
+                                <a href="@Url.Action("Delete", "Kitap", new { id = kitap.Id })"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Bu kitabı silmek istediğinizden emin misiniz?');">🗑 Sil</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

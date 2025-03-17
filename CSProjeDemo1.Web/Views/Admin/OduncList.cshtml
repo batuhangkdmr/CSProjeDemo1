@@ -1,25 +1,37 @@
 ﻿@model IEnumerable<CSProjeDemo1.Core.Entities.OduncAlma>
 
-<h2>Ödünç Alınan Kitaplar</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Kitap</th>
-            <th>Kullanıcı</th>
-            <th>Alma Tarihi</th>
-            <th>İade Tarihi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var odunc in Model)
-        {
-            <tr>
-                <td>@odunc.Kitap.Baslik</td>
-                <td>@odunc.ApplicationUser.UserName (@odunc.ApplicationUser.Email)</td>
-                <td>@odunc.AlmaTarihi.ToString("dd/MM/yyyy")</td>
-                <td>@(odunc.IadeTarihi.HasValue ? odunc.IadeTarihi.Value.ToString("dd/MM/yyyy") : "Henüz İade Edilmedi")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container mt-4">
+    <h2 class="text-center">📚 Ödünç Alınan Kitaplar</h2>
+    <div class="card shadow p-4">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>📖 Kitap</th>
+                    <th>👤 Kullanıcı</th>
+                    <th>📅 Alma Tarihi</th>
+                    <th>🔄 İade Tarihi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var odunc in Model)
+                {
+                    <tr>
+                        <td>@odunc.Kitap.Baslik</td>
+                        <td>@odunc.ApplicationUser.UserName (<span class="text-muted">@odunc.ApplicationUser.Email</span>)</td>
+                        <td>@odunc.AlmaTarihi.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            @if (odunc.IadeTarihi.HasValue)
+                            {
+                                <span class="badge bg-success">📅 @odunc.IadeTarihi.Value.ToString("dd.MM.yyyy")</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">❌ Henüz İade Edilmedi</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

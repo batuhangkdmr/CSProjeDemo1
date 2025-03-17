@@ -2,10 +2,11 @@
 using CSProjeDemo1.Core.Enums;
 using CSProjeDemo1.Data.IRepositories;
 using CSProjeDemo1.Service.Interfaces;
+using CSProjeDemo1.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CSProjeDemo1.Service.Services
@@ -13,10 +14,12 @@ namespace CSProjeDemo1.Service.Services
     public class KitapService : IKitapService
     {
         private readonly IRepository<Kitap> _kitapRepository;
+        private readonly KutuphaneContext _context;
 
-        public KitapService(IRepository<Kitap> kitapRepository)
+        public KitapService(IRepository<Kitap> kitapRepository, KutuphaneContext context)
         {
             _kitapRepository = kitapRepository;
+            _context = context;
         }
 
         public async Task<IEnumerable<Kitap>> GetAllBooksAsync()
@@ -34,38 +37,56 @@ namespace CSProjeDemo1.Service.Services
             return await _kitapRepository.GetByIdAsync(id);
         }
 
-        public async Task<bool> OduncAlAsync(int kitapId, int uyeId)
+        public async Task<bool> OduncAlAsync(int kitapId, string userId)
         {
             var kitap = await _kitapRepository.GetByIdAsync(kitapId);
             if (kitap == null || kitap.KitapDurumu != Durum.OduncAlabilir)
                 return false;
 
+            // **Ödünç alma kaydı ekle**
+            var oduncAlma = new OduncAlma
+            {
+                ApplicationUserId = userId, // Artık UserId kullanıyoruz
+                KitapId = kitapId,
+                AlmaTarihi = DateTime.Now
+            };
+
             kitap.KitapDurumu = Durum.OduncVerildi;
+
+            _context.OduncAlmalar.Add(oduncAlma);
             await _kitapRepository.UpdateAsync(kitap);
+            await _context.SaveChangesAsync();
+
             return true;
         }
 
-        public async Task<bool> IadeEtAsync(int kitapId)
+        public async Task<bool> IadeEtAsync(int kitapId, string userId)
         {
-            var kitap = await _kitapRepository.GetByIdAsync(kitapId);
-            if (kitap == null || kitap.KitapDurumu != Durum.OduncVerildi)
-                return false;
+            var odunc = await _context.OduncAlmalar
+                .Include(o => o.Kitap)
+                .FirstOrDefaultAsync(o => o.KitapId == kitapId && o.ApplicationUserId == userId && o.IadeTarihi == null);
 
-            kitap.KitapDurumu = Durum.OduncAlabilir;
-            await _kitapRepository.UpdateAsync(kitap);
+            if (odunc == null)
+                return false; // Kitap zaten iade edilmiş veya ödünç alınmamış.
+
+            odunc.IadeTarihi = DateTime.Now;
+            odunc.Kitap.KitapDurumu = Durum.OduncAlabilir;
+
+            await _context.SaveChangesAsync();
             return true;
         }
+
         public async Task AddKitapAsync(Kitap kitap)
         {
             await _kitapRepository.AddAsync(kitap);
         }
+
         public async Task<bool> UpdateKitapAsync(Kitap kitap)
         {
             var existingKitap = await _kitapRepository.GetByIdAsync(kitap.Id);
             if (existingKitap == null)
                 return false;
 
-            // Sadece değişen alanları güncelleyelim
             existingKitap.ISBN = kitap.ISBN;
             existingKitap.Baslik = kitap.Baslik;
             existingKitap.Yazar = kitap.Yazar;
@@ -85,6 +106,5 @@ namespace CSProjeDemo1.Service.Services
             await _kitapRepository.DeleteAsync(kitap);
             return true;
         }
-
     }
 }

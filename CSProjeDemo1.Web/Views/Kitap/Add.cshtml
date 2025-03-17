@@ -1,6 +1,7 @@
 ﻿@model CSProjeDemo1.Core.Entities.Kitap
 
 <h2>Yeni Kitap Ekle</h2>
+
 <form asp-action="Add" method="post">
     <div class="form-group">
         <label>ISBN:</label>
@@ -22,5 +23,6 @@
         <label>Durum:</label>
         <select asp-for="KitapDurumu" asp-items="Html.GetEnumSelectList<CSProjeDemo1.Core.Enums.Durum>()" class="form-control"></select>
     </div>
-    <button type="submit" class="btn btn-primary">Kitap Ekle</button>
+    <button type="submit" class="btn btn-primary mt-3">Kitap Ekle</button>
+    <a href="@Url.Action("Index", "Kitap")" class="btn btn-secondary mt-3">İptal</a>
 </form>

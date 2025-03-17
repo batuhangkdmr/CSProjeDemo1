@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSProjeDemo1.Data.Migrations
 {
     [DbContext(typeof(KutuphaneContext))]
-    [Migration("20250313195640_init")]
-    partial class init
+    [Migration("20250317010356_deneme")]
+    partial class deneme
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,13 +103,13 @@ namespace CSProjeDemo1.Data.Migrations
                             Id = "10000000-0000-0000-0000-000000000001",
                             AccessFailedCount = 0,
                             Ad = "Admin",
-                            ConcurrencyStamp = "0c79335e-0b09-4a8d-a82c-610689a22d5a",
+                            ConcurrencyStamp = "03a5f49d-8be7-4f67-8406-27363b4e5b2f",
                             Email = "admin@library.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LIBRARY.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOFk/2a6/FbGrBrP08/azybbWgJptha0KpFetqs5tf/bB153IKuDtOEOG8oBZOrR0g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBS5iQu/sef3miIe1pdEI5INgu8z1AXqg2veFqncLwaFiNCr3TL5yJXgpFEGMJLybA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Soyad = "Library",
@@ -121,13 +121,13 @@ namespace CSProjeDemo1.Data.Migrations
                             Id = "10000000-0000-0000-0000-000000000002",
                             AccessFailedCount = 0,
                             Ad = "Normal",
-                            ConcurrencyStamp = "fea76fbd-d851-4cee-9666-75ecbbdad8b4",
+                            ConcurrencyStamp = "ad65c24f-4d90-4d48-97d9-7c4e9126bc2a",
                             Email = "user@library.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LIBRARY.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFYAHr7SmHhsKcNrtn2nvno0boMN2/VIfZQM9VT4/pLceugPYJBPgXdp1f+9D+FrAA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAr4M903h8Ucu5CyLYeUnyLjjxbVRhGEV+oElUy2Epb7bB+PkUN0JGZwQ5oy3Bj5Fg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             Soyad = "User",
@@ -182,6 +182,36 @@ namespace CSProjeDemo1.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("CSProjeDemo1.Core.Entities.OduncAlma", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AlmaTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("IadeTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KitapId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("KitapId");
+
+                    b.ToTable("OduncAlmalar");
+                });
+
             modelBuilder.Entity("CSProjeDemo1.Core.Entities.Uye", b =>
                 {
                     b.Property<int>("Id")
@@ -206,22 +236,6 @@ namespace CSProjeDemo1.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Uyeler");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Ad = "Ali",
-                            Soyad = "Yılmaz",
-                            UyeNumarasi = 1001
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Ad = "Ayşe",
-                            Soyad = "Demir",
-                            UyeNumarasi = 1002
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -442,6 +456,25 @@ namespace CSProjeDemo1.Data.Migrations
                     b.HasOne("CSProjeDemo1.Core.Entities.Uye", null)
                         .WithMany("OduncAldigiKitaplar")
                         .HasForeignKey("UyeId");
+                });
+
+            modelBuilder.Entity("CSProjeDemo1.Core.Entities.OduncAlma", b =>
+                {
+                    b.HasOne("CSProjeDemo1.Core.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CSProjeDemo1.Core.Entities.Kitap", "Kitap")
+                        .WithMany()
+                        .HasForeignKey("KitapId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Kitap");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

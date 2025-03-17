@@ -2,10 +2,19 @@
 
 <h2>Kütüphane Kitapları</h2>
 
-<!-- Kitap Ekleme Butonu -->
-<a href="@Url.Action("Add", "Kitap")" class="btn btn-success mb-3">+ Kitap Ekle</a>
+<!-- Hata Mesajları -->
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
-<table class="table">
+<!-- Kitap Ekleme Butonu (Sadece Admin Görsün) -->
+@if (User.IsInRole("Admin"))
+{
+    <a href="@Url.Action("Add", "Kitap")" class="btn btn-success mb-3">+ Kitap Ekle</a>
+}
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>ISBN</th>
@@ -24,20 +33,31 @@
                 <td>@kitap.Baslik</td>
                 <td>@kitap.Yazar</td>
                 <td>@kitap.YayinYili</td>
-                <td>@kitap.KitapDurumu</td>
                 <td>
                     @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
                     {
-                        <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id, uyeId = 1 })" class="btn btn-primary">Ödünç Al</a>
+                        <span class="badge bg-success">Ödünç Alınabilir</span>
                     }
                     else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
                     {
-                        <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })" class="btn btn-danger">İade Et</a>
+                        <span class="badge bg-danger">Ödünç Verildi</span>
+                    }
+                </td>
+                <td>
+                    @if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncAlabilir)
+                    {
+                        <a href="@Url.Action("OduncAl", "Kitap", new { id = kitap.Id })" class="btn btn-primary">Ödünç Al</a>
+                    }
+                    else if (kitap.KitapDurumu == CSProjeDemo1.Core.Enums.Durum.OduncVerildi)
+                    {
+                        <a href="@Url.Action("IadeEt", "Kitap", new { id = kitap.Id })" class="btn btn-secondary">İade Et</a>
                     }
 
-                    <!-- Düzenle ve Sil Butonları -->
-                    <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })" class="btn btn-warning">Düzenle</a>
-                    <a href="@Url.Action("Delete", "Kitap", new { id = kitap.Id })" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinizden emin misiniz?');">Sil</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="@Url.Action("Edit", "Kitap", new { id = kitap.Id })" class="btn btn-warning">Düzenle</a>
+                        <a href="@Url.Action("Delete", "Kitap", new { id = kitap.Id })" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinizden emin misiniz?');">Sil</a>
+                    }
                 </td>
             </tr>
         }

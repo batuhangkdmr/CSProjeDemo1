@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CSProjeDemo1.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class deneme : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -199,6 +199,34 @@ namespace CSProjeDemo1.Data.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "OduncAlmalar",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    KitapId = table.Column<int>(type: "int", nullable: false),
+                    AlmaTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IadeTarihi = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OduncAlmalar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OduncAlmalar_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OduncAlmalar_Kitaplar_KitapId",
+                        column: x => x.KitapId,
+                        principalTable: "Kitaplar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -213,8 +241,8 @@ namespace CSProjeDemo1.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Ad", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Soyad", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "10000000-0000-0000-0000-000000000001", 0, "Admin", "0c79335e-0b09-4a8d-a82c-610689a22d5a", "admin@library.com", true, false, null, "ADMIN@LIBRARY.COM", "ADMIN", "AQAAAAIAAYagAAAAEOFk/2a6/FbGrBrP08/azybbWgJptha0KpFetqs5tf/bB153IKuDtOEOG8oBZOrR0g==", null, false, "", "Library", false, "admin" },
-                    { "10000000-0000-0000-0000-000000000002", 0, "Normal", "fea76fbd-d851-4cee-9666-75ecbbdad8b4", "user@library.com", true, false, null, "USER@LIBRARY.COM", "USER", "AQAAAAIAAYagAAAAEFYAHr7SmHhsKcNrtn2nvno0boMN2/VIfZQM9VT4/pLceugPYJBPgXdp1f+9D+FrAA==", null, false, "", "User", false, "user" }
+                    { "10000000-0000-0000-0000-000000000001", 0, "Admin", "03a5f49d-8be7-4f67-8406-27363b4e5b2f", "admin@library.com", true, false, null, "ADMIN@LIBRARY.COM", "ADMIN", "AQAAAAIAAYagAAAAEBS5iQu/sef3miIe1pdEI5INgu8z1AXqg2veFqncLwaFiNCr3TL5yJXgpFEGMJLybA==", null, false, "", "Library", false, "admin" },
+                    { "10000000-0000-0000-0000-000000000002", 0, "Normal", "ad65c24f-4d90-4d48-97d9-7c4e9126bc2a", "user@library.com", true, false, null, "USER@LIBRARY.COM", "USER", "AQAAAAIAAYagAAAAEAr4M903h8Ucu5CyLYeUnyLjjxbVRhGEV+oElUy2Epb7bB+PkUN0JGZwQ5oy3Bj5Fg==", null, false, "", "User", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -225,15 +253,6 @@ namespace CSProjeDemo1.Data.Migrations
                     { 1, "Bilim Kitabı 1", "123456789", 0, "Bilim", null, 1995, "Isaac Newton" },
                     { 2, "Roman Kitabı 1", "987654321", 0, "Roman", null, 1980, "Victor Hugo" },
                     { 3, "Tarih Kitabı 1", "567890123", 0, "Tarih", null, 2005, "Halil İnalcık" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Uyeler",
-                columns: new[] { "Id", "Ad", "Soyad", "UyeNumarasi" },
-                values: new object[,]
-                {
-                    { 1, "Ali", "Yılmaz", 1001 },
-                    { 2, "Ayşe", "Demir", 1002 }
                 });
 
             migrationBuilder.InsertData(
@@ -288,6 +307,16 @@ namespace CSProjeDemo1.Data.Migrations
                 name: "IX_Kitaplar_UyeId",
                 table: "Kitaplar",
                 column: "UyeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OduncAlmalar_ApplicationUserId",
+                table: "OduncAlmalar",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OduncAlmalar_KitapId",
+                table: "OduncAlmalar",
+                column: "KitapId");
         }
 
         /// <inheritdoc />
@@ -309,13 +338,16 @@ namespace CSProjeDemo1.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Kitaplar");
+                name: "OduncAlmalar");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Kitaplar");
 
             migrationBuilder.DropTable(
                 name: "Uyeler");

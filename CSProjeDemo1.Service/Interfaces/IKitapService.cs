@@ -9,13 +9,13 @@ namespace CSProjeDemo1.Service.Interfaces
 {
     public interface IKitapService
     {
-        Task<IEnumerable<Kitap>> GetAllBooksAsync();
-        Task<IEnumerable<Kitap>> GetAvailableBooksAsync();
-        Task<Kitap> GetBookByIdAsync(int id);
-        Task<bool> OduncAlAsync(int kitapId, int uyeId);
-        Task<bool> IadeEtAsync(int kitapId);
-        Task AddKitapAsync(Kitap kitap);
-        Task<bool> DeleteKitapAsync(int id);
-        Task<bool> UpdateKitapAsync(Kitap kitap);
+        Task<IEnumerable<Kitap>> GetAllBooksAsync(); // Tüm kitapları getir
+        Task<IEnumerable<Kitap>> GetAvailableBooksAsync(); // Sadece ödünç alınabilir kitapları getir
+        Task<Kitap> GetBookByIdAsync(int id); // Belirli bir kitabı getir
+        Task<bool> OduncAlAsync(int kitapId, string userId); // Kitap ödünç alma
+        Task<bool> IadeEtAsync(int kitapId, string userId); // Kitap iade etme
+        Task AddKitapAsync(Kitap kitap); // Yeni kitap ekleme
+        Task<bool> UpdateKitapAsync(Kitap kitap); // Kitap bilgilerini güncelleme
+        Task<bool> DeleteKitapAsync(int id); // Kitap silme
     }
 }

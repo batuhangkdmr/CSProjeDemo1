@@ -1,37 +1,41 @@
 ﻿@model CSProjeDemo1.Core.Entities.Kitap
 
-<h2>Kitap Düzenle</h2>
+<div class="container mt-4">
+    <h2 class="text-center">📘 Kitap Düzenle</h2>
+    <div class="card shadow p-4">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <input type="hidden" asp-for="Id" />
 
-<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
-    <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label class="form-label fw-bold">📖 ISBN:</label>
+                <input asp-for="ISBN" class="form-control" type="text" required />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
 
-    <div class="form-group">
-        <label asp-for="ISBN">ISBN:</label>
-        <input asp-for="ISBN" class="form-control" type="text" required />
-        <span asp-validation-for="ISBN" class="text-danger"></span>
+            <div class="mb-3">
+                <label class="form-label fw-bold">📕 Başlık:</label>
+                <input asp-for="Baslik" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">✍ Yazar:</label>
+                <input asp-for="Yazar" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">📅 Yayın Yılı:</label>
+                <input asp-for="YayinYili" class="form-control" type="number" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">🔖 Durum:</label>
+                <select asp-for="KitapDurumu" asp-items="Html.GetEnumSelectList<CSProjeDemo1.Core.Enums.Durum>()" class="form-control"></select>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-warning">💾 Kaydet</button>
+                <a href="@Url.Action("Index", "Kitap")" class="btn btn-secondary">❌ İptal</a>
+            </div>
+        </form>
     </div>
-
-
-    <div class="form-group">
-        <label asp-for="Baslik">Başlık:</label>
-        <input asp-for="Baslik" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Yazar">Yazar:</label>
-        <input asp-for="Yazar" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="YayinYili">Yayın Yılı:</label>
-        <input asp-for="YayinYili" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="KitapDurumu">Durum:</label>
-        <select asp-for="KitapDurumu" asp-items="Html.GetEnumSelectList<CSProjeDemo1.Core.Enums.Durum>()" class="form-control"></select>
-    </div>
-
-    <button type="submit" class="btn btn-success mt-3">Kaydet</button>
-    <a href="@Url.Action("Index", "Kitap")" class="btn btn-secondary mt-3">İptal</a>
-</form>
+</div>

@@ -14,8 +14,8 @@ namespace CSProjeDemo1.Core.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required(ErrorMessage = "ISBN numarası zorunludur.")]
-        [StringLength(13, MinimumLength = 10, ErrorMessage = "ISBN 10-13 karakter arasında olmalıdır.")]
+        [Required]
+        [RegularExpression(@"^\d{9,13}$", ErrorMessage = "ISBN numarası 9 ile 13 basamak arasında olmalıdır.")]
         public string ISBN { get; set; }
 
         [Required(ErrorMessage = "Kitap başlığı zorunludur.")]

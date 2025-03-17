@@ -87,7 +87,7 @@ namespace CSProjeDemo1.Service.Services
             if (existingKitap == null)
                 return false;
 
-            existingKitap.ISBN = kitap.ISBN;
+            existingKitap.ISBN = kitap.ISBN.Trim(); // boşlukları temizlemek için Trim kullandık.
             existingKitap.Baslik = kitap.Baslik;
             existingKitap.Yazar = kitap.Yazar;
             existingKitap.YayinYili = kitap.YayinYili;
